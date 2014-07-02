@@ -1,0 +1,31 @@
+{
+    "name": "RobMasters/Filler",
+    "description": "Easy to use PHP Fixtures library",
+    "minimum-stability": "dev",
+    "config": {
+        "preferred-install": "source",
+        "bin-dir": "bin"
+    },
+    "authors": [
+        {
+            "name": "Rob Masters",
+            "email": "robmasters87@gmail.com"
+        }
+    ],
+
+    "autoload": {
+        "psr-0": {
+            "Filler": "src"
+        }
+    },
+
+    "require": {
+        "symfony/yaml": "2.5.*@dev",
+        "symfony/event-dispatcher": "2.5.*@dev"
+    },
+
+    "require-dev": {
+        "phpspec/phpspec": "2.0.*@dev",
+        "propel/propel1": "1.7.*@dev"
+    }
+}
