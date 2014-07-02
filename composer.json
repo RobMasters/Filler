@@ -1,5 +1,5 @@
 {
-    "name": "RobMasters/Filler",
+    "name": "robmasters/filler",
     "description": "Easy to use PHP Fixtures library",
     "minimum-stability": "dev",
     "config": {
