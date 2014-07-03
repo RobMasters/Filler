@@ -64,6 +64,17 @@ class FixturesBuilderSpec extends ObjectBehavior
         $this->abortLoad();
     }
 
+    function it_throws_exception_if_end_called_before_building()
+    {
+        $this->shouldThrow('Filler\Exception\FixtureBuildingException')->duringEnd();
+    }
+
+    function it_does_nothing_if_end_called_without_building_any_rows($persistor)
+    {
+        $persistor->persist(Argument::any())->shouldNotBeCalled();
+        $this->build('spec\Filler\Person')->end()->shouldReturn($this);
+    }
+
     function it_stores_class_name_when_build_called()
     {
         $this->build('spec\Filler\Person')->shouldReturn($this);

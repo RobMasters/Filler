@@ -2,6 +2,7 @@
 
 namespace Filler;
 
+use Filler\Exception\FixtureBuildingException;
 use Filler\Persistor\PersistorInterface;
 
 /**
@@ -135,10 +136,15 @@ class FixturesBuilder
     }
 
     /**
+     * @throws FixtureBuildingException
      * @return $this
      */
     public function end()
     {
+        if (empty($this->class)) {
+            throw new FixtureBuildingException('Failed to end fixture building - nothing is currently being built');
+        }
+
         if ($this->getInstance()) {
             $this->persistInstance();
             $this->instance = null;

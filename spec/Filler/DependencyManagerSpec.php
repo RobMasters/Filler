@@ -64,4 +64,11 @@ class DependencyManagerSpec extends ObjectBehavior
         $this->addResolver($resolver);
         $this->getResolvers()->shouldBe([$resolver]);
     }
+
+    function it_dispatches_event_when_given_a_labelled_fixture($dispatcher)
+    {
+        /** @var EventDispatcher $dispatcher */
+        $dispatcher->dispatch('fixture.resolve.Car:kitt', Argument::type('Filler\Event\FixtureAddedEvent'))->shouldBeCalled();
+        $this->set(new Car(), 'kitt');
+    }
 }

@@ -2,7 +2,9 @@
 
 namespace Filler;
 
+use Filler\Event\FixtureAddedEvent;
 use Filler\Event\FixtureEvents;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -68,6 +70,9 @@ class DependencyManager
         }
 
         $this->cache[$reference] = $object;
+
+        $event = new FixtureAddedEvent($object);
+        $this->dispatcher->dispatch(sprintf(FixtureEvents::RESOLVE_DEPENDENCY_PATTERN, $reference), $event);
     }
 
     /**
