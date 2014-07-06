@@ -30,9 +30,6 @@ class LoadFixturesCommand extends Command
         $this->configureConnection($loader->getConfig());
         $builder = new FixturesBuilder(new PropelPersistor(), new DependencyManager(new EventDispatcher()));
         $loader->setBuilder($builder)->load();
-
-        $statement = \UserPeer::doSelectStmt(new \Criteria());
-        $users = $statement->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**

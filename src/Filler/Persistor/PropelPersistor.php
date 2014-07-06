@@ -53,5 +53,7 @@ class PropelPersistor implements PersistorInterface
     public function persist(\Persistent $object)
     {
         $object->save($this->connection);
+
+        echo "\n\nPERSISTED " . get_class($object) . " OBJECT\n"; var_dump($object);
     }
 }

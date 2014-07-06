@@ -146,6 +146,9 @@ class FeatureContext implements SnippetAcceptingContext
         $this->process->setCommandLine($command);
         $this->process->start();
         $this->process->wait();
+
+        echo "\n\nFILLER ERROR OUTPUT:" . $this->process->getErrorOutput();
+        echo "\n\nFILLER OUTPUT:" . $this->process->getOutput();
     }
 
     /**
@@ -157,6 +160,8 @@ class FeatureContext implements SnippetAcceptingContext
         $query = new $queryClass;
         /** @var \PropelCollection $collection */
         $collection = $query->find();
+
+        echo "\n\nPROPEL COLLECTION:\n"; var_dump($collection);
 
         foreach ($table->getHash() as $index => $rowHash) {
             $object = $collection->get($index);
