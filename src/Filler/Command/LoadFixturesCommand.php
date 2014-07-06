@@ -27,13 +27,14 @@ class LoadFixturesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $loader = new FixturesLoader();
-        $this->configureConnection($loader->getConfig());
-        $builder = new FixturesBuilder(new PropelPersistor(), new DependencyManager(new EventDispatcher()));
+        $persistor = $this->configureConnection($loader->getConfig());
+        $builder = new FixturesBuilder($persistor, new DependencyManager(new EventDispatcher()));
         $loader->setBuilder($builder)->load();
     }
 
     /**
      * @param $config
+     * @return \Filler\Persistor\PersistorInterface
      */
     private function configureConnection($config)
     {
@@ -41,8 +42,11 @@ class LoadFixturesCommand extends Command
         switch ($type) {
             case 'propel':
                 $this->configurePropel($config['propel']);
+                $persistor = new PropelPersistor();
                 break;
         }
+
+        return $persistor;
     }
 
     /**
