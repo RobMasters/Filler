@@ -190,7 +190,7 @@ class FixturesBuilder
     {
         $this->persistor->persist($this->instance);
         if ($key = $this->getInstanceKey()) {
-            $this->dependencyManager->set($this->instance, $key);
+            $this->dependencyManager->set($key, $this->instance);
         }
     }
 

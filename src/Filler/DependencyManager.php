@@ -63,7 +63,7 @@ class DependencyManager
      * @param $reference
      * @param $object
      */
-    public function set($object, $reference)
+    public function set($reference, $object)
     {
         if (!preg_match('/^[a-z0-9]+:[a-z0-9_-]+$/', $reference)) {
             $reference = $this->createReference($object, $reference);
@@ -71,7 +71,7 @@ class DependencyManager
 
         $this->cache[$reference] = $object;
 
-        $event = new FixtureAddedEvent($object);
+        $event = new FixtureAddedEvent($reference, $object);
         $this->dispatcher->dispatch(sprintf(FixtureEvents::RESOLVE_DEPENDENCY_PATTERN, $reference), $event);
     }
 

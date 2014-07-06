@@ -21,10 +21,21 @@ class FixturesLoader
     /**
      * @param FixturesBuilder $builder
      */
-    function __construct(FixturesBuilder $builder)
+    function __construct(FixturesBuilder $builder = null)
     {
         $this->builder = $builder;
         $this->config = $this->loadConfiguration();
+    }
+
+    /**
+     * @param FixturesBuilder $builder
+     * @return $this
+     */
+    public function setBuilder(FixturesBuilder $builder)
+    {
+        $this->builder = $builder;
+
+        return $this;
     }
 
     /**
@@ -43,6 +54,7 @@ class FixturesLoader
             $this->builder->postLoad();
         } catch (\Exception $e) {
             $this->builder->abortLoad();
+            throw $e;
         }
     }
 
@@ -99,9 +111,23 @@ class FixturesLoader
     /**
      * @return Fixture[]
      */
-    private function getFixtures()
+    protected function getFixtures()
     {
-        $out = array();
+        $path = $this->config['filler']['fixtures_path'];
+        $finder = new Finder();
+        $finder
+            ->files()
+            ->in(getcwd() . DIRECTORY_SEPARATOR . $path)
+            ->name('/.php$/')
+        ;
+
+        $out = [];
+        foreach ($finder as $file) {
+            /** @var \SplFileInfo $file */
+            require_once $file->getPathname();
+            $class = substr($file->getFilename(), 0, -4);
+            $out[] = new $class;
+        }
 
         return $out;
     }

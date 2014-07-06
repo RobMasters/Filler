@@ -1,2 +1,2 @@
 filler:
-    fixtures_path: app/fixtures
+    fixtures_path: fixtures

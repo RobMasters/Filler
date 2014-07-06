@@ -7,23 +7,38 @@ use Symfony\Component\EventDispatcher\Event;
 class FixtureAddedEvent extends Event
 {
     /**
-     * @var
+     * @var string
      */
-    private $fixture;
+    private $reference;
 
     /**
-     * @param mixed $fixture The persisted fixture
+     * @var mixed
      */
-    function __construct($fixture)
+    private $object;
+
+    /**
+     * @param $reference
+     * @param mixed $object The persisted fixture object
+     */
+    function __construct($reference, $object)
     {
-        $this->fixture = $fixture;
+        $this->reference = $reference;
+        $this->object = $object;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReference()
+    {
+        return $this->reference;
     }
 
     /**
      * @return mixed
      */
-    public function getFixture()
+    public function getObject()
     {
-        return $this->fixture;
+        return $this->object;
     }
 }

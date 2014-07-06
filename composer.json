@@ -26,6 +26,9 @@
 
     "require-dev": {
         "phpspec/phpspec": "2.0.*@dev",
-        "propel/propel1": "1.7.*@dev"
+        "behat/behat": "~3.0.10",
+        "symfony/process": "~2.5",
+        "propel/propel1": "1.7.*@dev",
+        "phpunit/phpunit": "~4.0.7"
     }
 }

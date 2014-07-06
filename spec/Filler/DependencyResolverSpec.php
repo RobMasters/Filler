@@ -2,6 +2,7 @@
 
 namespace spec\Filler;
 
+use Filler\Event\FixtureAddedEvent;
 use Filler\FixturesBuilder;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -66,6 +67,21 @@ class DependencyResolverSpec extends ObjectBehavior
     {
         $this->depends('User:george');
         $this->resolve('User:george', new \stdClass());
+        $this->isResolved()->shouldReturn(true);
+    }
+
+    function it_throws_exception_when_resolve_called_with_a_non_dependency()
+    {
+        $this->depends('User:george');
+        $this->shouldThrow('Filler\Exception\FixtureBuildingException')->duringResolve('User:jane', new \stdClass());
+    }
+
+    function it_can_be_resolved_by_handling_fixture_added_events(FixtureAddedEvent $event)
+    {
+        $this->depends('User:george');
+        $event->getReference()->willReturn('User:george');
+        $event->getObject()->willReturn(new \stdClass());
+        $this->handle($event);
         $this->isResolved()->shouldReturn(true);
     }
 }

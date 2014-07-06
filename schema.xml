@@ -1,0 +1,7 @@
+<database name="filler" defaultIdMethod="native">
+    <table name="users" phpName="User" idMethod="native">
+        <column name="id" phpName="Id" type="TINYINT" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="name" phpName="Name" type="VARCHAR" size="255" required="true"/>
+        <column name="email" phpName="Email" type="VARCHAR" size="255" required="true"/>
+    </table>
+</database>

@@ -1,6 +1,8 @@
 <?php
 
 namespace Filler;
+use Filler\Event\FixtureAddedEvent;
+use Filler\Exception\FixtureBuildingException;
 
 /**
  * Class to handle dependencies for a given closure
@@ -47,23 +49,35 @@ class DependencyResolver
         return array_keys($this->dependencies);
     }
 
-    // TODO handle() method
-
     /**
      * @param $reference
      * @param $object
+     * @throws Exception\FixtureBuildingException
      */
     public function resolve($reference, $object)
     {
-        // TODO check reference is a dependency
+        if (!array_key_exists($reference, $this->dependencies)) {
+            throw new FixtureBuildingException(sprintf('Provided reference, `%s`, is not a dependency', $reference));
+        }
 
         $this->dependencies[$reference] = $object;
         $this->evaluate();
     }
 
+    /**
+     * @return bool
+     */
     public function isResolved()
     {
         return !in_array(null, $this->dependencies);
+    }
+
+    /**
+     * @param FixtureAddedEvent $event
+     */
+    public function handle(FixtureAddedEvent $event)
+    {
+        $this->resolve($event->getReference(), $event->getObject());
     }
 
     /**

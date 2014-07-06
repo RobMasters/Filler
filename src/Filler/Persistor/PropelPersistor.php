@@ -17,9 +17,9 @@ class PropelPersistor implements PersistorInterface
     /**
      * @param \PropelPDO $connection
      */
-    public function __construct(\PropelPDO $connection)
+    public function __construct(\PropelPDO $connection = null)
     {
-        $this->connection = $connection;
+        $this->connection = $connection ?: \Propel::getConnection();
     }
 
     /**

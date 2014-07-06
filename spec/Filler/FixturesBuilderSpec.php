@@ -2,11 +2,9 @@
 
 namespace spec\Filler;
 
-use Exception;
 use Filler\DependencyManager;
 use Filler\DependencyResolver;
 use Filler\Persistor\PersistorInterface;
-use ObjectKey;
 use PhpSpec\ObjectBehavior;
 use PropelPDO;
 use Prophecy\Argument;
@@ -152,7 +150,7 @@ class FixturesBuilderSpec extends ObjectBehavior
 
     function it_stores_reference_to_instance_when_key_specified_manually(Person $barry, $dependencyManager)
     {
-        $dependencyManager->set(Argument::type('spec\Filler\Person'), 'barry')->shouldBeCalled();
+        $dependencyManager->set('barry', Argument::type('spec\Filler\Person'))->shouldBeCalled();
         $this->build($barry)->add('barry')->name('Barry')->end();
     }
 
@@ -181,7 +179,7 @@ class FixturesBuilderSpec extends ObjectBehavior
             $b->build($person)->add()->favouriteAnimal($monkey)->end();
         });
 
-        $dependencyManager->set(Argument::type('spec\Filler\Animal'), 'monkey')->shouldBeCalled();
+        $dependencyManager->set('monkey', Argument::type('spec\Filler\Animal'))->shouldBeCalled();
         $this->build('spec\Filler\Animal')->add('monkey')->type('monkey')->end();
     }
 }

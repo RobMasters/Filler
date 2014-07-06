@@ -2,9 +2,20 @@
 
 namespace spec\Filler;
 
+use Filler\Fixture;
 use Filler\FixturesBuilder;
+use Filler\FixturesLoader;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Symfony\Component\Finder\Finder;
+
+class EmptyFixturesLoader extends FixturesLoader
+{
+    protected function getFixtures()
+    {
+        return array();
+    }
+}
 
 class FixturesLoaderSpec extends ObjectBehavior
 {
@@ -22,13 +33,16 @@ class FixturesLoaderSpec extends ObjectBehavior
     {
         $this->getConfig()->shouldReturn([
             'filler' => [
-                'fixtures_path' => 'app/fixtures'
+                'fixtures_path' => 'fixtures'
             ]
         ]);
     }
 
     function it_calls_pre_and_post_load_methods_on_builder($builder)
     {
+        $this->beAnInstanceOf('spec\Filler\EmptyFixturesLoader');
+        $this->beConstructedWith($builder);
+
         $builder->preLoad()->shouldBeCalledTimes(1);
         $builder->postLoad()->shouldBeCalledTimes(1);
 

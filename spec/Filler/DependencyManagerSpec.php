@@ -42,7 +42,7 @@ class DependencyManagerSpec extends ObjectBehavior
     function it_does_not_store_resolvers_that_can_be_resolved_from_cache(DependencyResolver $resolver, $dispatcher)
     {
         $car = new Car();
-        $this->set($car, 'kitt');
+        $this->set('kitt', $car);
 
         $resolver->resolve('Car:kitt', $car)->shouldBeCalled();
         $resolver->getDependencies()->willReturn(['Car:kitt']);
@@ -67,8 +67,7 @@ class DependencyManagerSpec extends ObjectBehavior
 
     function it_dispatches_event_when_given_a_labelled_fixture($dispatcher)
     {
-        /** @var EventDispatcher $dispatcher */
-        $dispatcher->dispatch('fixture.resolve.Car:kitt', Argument::type('Filler\Event\FixtureAddedEvent'))->shouldBeCalled();
-        $this->set(new Car(), 'kitt');
+        $dispatcher->dispatch('fixture.resolve.Car:kitt', Argument::which('getReference', 'Car:kitt'))->shouldBeCalled();
+        $this->set('kitt', new Car());
     }
 }
