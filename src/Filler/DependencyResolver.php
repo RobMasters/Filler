@@ -11,13 +11,14 @@ use Filler\Exception\FixtureBuildingException;
  */
 class DependencyResolver
 {
+    /**
+     * @var array
+     */
     protected $dependencies = array();
-
     /**
      * @var FixturesBuilder
      */
     private $builder;
-
     /**
      * @var \Closure
      */
@@ -42,16 +43,21 @@ class DependencyResolver
     }
 
     /**
+     * @param bool $ignoreResolved
      * @return array
      */
-    public function getDependencies()
+    public function getDependencies($ignoreResolved = false)
     {
-        return array_keys($this->dependencies);
+        $dependencies = $ignoreResolved
+            ? array_filter($this->dependencies, function($value) { return is_null($value); })
+            : $this->dependencies;
+
+        return array_keys($dependencies);
     }
 
     /**
-     * @param $reference
-     * @param $object
+     * @param string $reference
+     * @param mixed $object
      * @throws Exception\FixtureBuildingException
      */
     public function resolve($reference, $object)
@@ -61,7 +67,9 @@ class DependencyResolver
         }
 
         $this->dependencies[$reference] = $object;
-        $this->evaluate();
+        if ($this->isResolved()) {
+            $this->execute();
+        }
     }
 
     /**
@@ -81,14 +89,17 @@ class DependencyResolver
     }
 
     /**
-     *
+     * @throws Exception\FixtureBuildingException
      */
-    protected function evaluate()
+    public function execute()
     {
-        if ($this->isResolved()) {
-            $parameters = array_values($this->dependencies);
-            array_unshift($parameters, $this->builder);
-            call_user_func_array($this->closure, $parameters);
+        if (!$this->isResolved()) {
+            throw new FixtureBuildingException('Cannot execute unresolved dependency resolver');
         }
+
+        $parameters = array_values($this->dependencies);
+        array_unshift($parameters, $this->builder);
+        call_user_func_array($this->closure, $parameters);
+        $this->executed = true;
     }
 }

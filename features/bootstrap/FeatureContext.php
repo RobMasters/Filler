@@ -145,7 +145,9 @@ class FeatureContext implements SnippetAcceptingContext
         );
         $this->process->setCommandLine($command);
         $this->process->start();
-        $this->process->wait();
+
+        // TODO store exit code and process output for verification
+        $exitCode = $this->process->wait();
     }
 
     /**

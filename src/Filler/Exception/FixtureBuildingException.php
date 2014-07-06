@@ -7,6 +7,6 @@ namespace Filler\Exception;
  *
  * @author Rob Masters <robmasters87@gmail.com>
  */
-final class FixtureBuildingException extends \RuntimeException
+class FixtureBuildingException extends \RuntimeException
 {
 }

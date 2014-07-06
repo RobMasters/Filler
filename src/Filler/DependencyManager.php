@@ -45,8 +45,9 @@ class DependencyManager
     public function createReference($object, $name)
     {
         $reflectionClass = ($object instanceof \ReflectionClass) ? $object : new \ReflectionClass($object);
+        $snakeCaseName = strtolower(preg_replace('/([A-Z])/', '_$1', lcfirst($name)));
 
-        return sprintf('%s:%s', $reflectionClass->getShortName(), $name);
+        return sprintf('%s:%s', $reflectionClass->getShortName(), $snakeCaseName);
     }
 
     /**
@@ -62,6 +63,7 @@ class DependencyManager
     /**
      * @param $reference
      * @param $object
+     * @return void
      */
     public function set($reference, $object)
     {
@@ -73,6 +75,12 @@ class DependencyManager
 
         $event = new FixtureAddedEvent($reference, $object);
         $this->dispatcher->dispatch(sprintf(FixtureEvents::RESOLVE_DEPENDENCY_PATTERN, $reference), $event);
+
+        // Execute any resolvers that were resolved by the event
+        $resolvers = $event->getResolvers();
+        foreach ($resolvers as $resolver) {
+            $resolver->execute();
+        }
     }
 
     /**
@@ -95,6 +103,21 @@ class DependencyManager
         if (!$resolver->isResolved()) {
             $this->resolvers[] = $resolver;
         }
+    }
+
+    /**
+     * @return DependencyResolver[]
+     */
+    public function getOutstanding()
+    {
+        $out = [];
+        foreach ($this->resolvers as $resolver) {
+            if (!$resolver->isResolved()) {
+                $out[] = $resolver;
+            }
+        }
+
+        return $out;
     }
 
     /**

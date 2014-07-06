@@ -3,6 +3,7 @@
 namespace Filler;
 
 use Filler\Exception\FixtureBuildingException;
+use Filler\Exception\UnresolvedDependenciesException;
 use Filler\Persistor\PersistorInterface;
 
 /**
@@ -103,6 +104,10 @@ class FixturesBuilder
      */
     public function postLoad()
     {
+        if ($outstanding = $this->dependencyManager->getOutstanding()) {
+            throw new UnresolvedDependenciesException($outstanding);
+        }
+
         $this->persistor->postLoad();
     }
 
@@ -126,7 +131,7 @@ class FixturesBuilder
         }
 
         if ($this->instance) {
-            return $this->end()->add();
+            return $this->end()->add($instanceKey);
         }
 
         $this->instanceKey = $instanceKey;
@@ -146,8 +151,11 @@ class FixturesBuilder
         }
 
         if ($this->getInstance()) {
-            $this->persistInstance();
+            $instance = $this->instance;
+            $instanceKey = $this->instanceKey;
             $this->instance = null;
+            $this->instanceKey = null;
+            $this->persistInstance($instance, $instanceKey);
         }
 
         return $this;
@@ -184,13 +192,14 @@ class FixturesBuilder
     }
 
     /**
-     *
+     * @param $instance
+     * @param $instanceKey
      */
-    protected function persistInstance()
+    protected function persistInstance($instance, $instanceKey)
     {
-        $this->persistor->persist($this->instance);
-        if ($key = $this->getInstanceKey()) {
-            $this->dependencyManager->set($key, $this->instance);
+        $this->persistor->persist($instance);
+        if ($instanceKey) {
+            $this->dependencyManager->set($instanceKey, $instance);
         }
     }
 

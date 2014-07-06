@@ -84,4 +84,12 @@ class DependencyResolverSpec extends ObjectBehavior
         $this->handle($event);
         $this->isResolved()->shouldReturn(true);
     }
+
+    function it_can_return_only_unmet_dependencies()
+    {
+        $this->depends('User:george');
+        $this->resolve('User:george', new \stdClass());
+        $this->depends('Animal:cat');
+        $this->getDependencies(true)->shouldReturn(['Animal:cat']);
+    }
 }
