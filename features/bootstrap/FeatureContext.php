@@ -49,7 +49,7 @@ class FeatureContext implements SnippetAcceptingContext
     public static function cleanTestFolders()
     {
         if (is_dir($dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'filler')) {
-//            self::clearDirectory($dir);
+            self::clearDirectory($dir);
         }
     }
 
