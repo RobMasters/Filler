@@ -137,12 +137,6 @@ class FeatureContext implements SnippetAcceptingContext
         $this->process->wait();
     }
 
-    public function something()
-    {
-        $query = new UserQuery;
-        $query->find();
-    }
-
     /**
      * @Then the :name table should contain:
      */
@@ -154,7 +148,7 @@ class FeatureContext implements SnippetAcceptingContext
         $collection = $query->find();
 
         foreach ($table->getHash() as $index => $rowHash) {
-            $object = $collection[$index];
+            $object = $collection->get($index);
             foreach ($rowHash as $key => $value) {
                 $getter = 'get' . ucfirst($key);
                 $objectValue = call_user_func([$object, $getter]);
