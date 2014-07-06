@@ -108,7 +108,7 @@ class UserFixtures implements Fixture
 }
 ```
 
-**fixtures/UserFixtures.php**
+**fixtures/MovieFixtures.php**
 
 ```php
 <?php
@@ -145,7 +145,7 @@ class MovieFixtures implements Fixture
 
 Key features:
 * Filler's FixturesBuilder treats your model classes like 'Plain Old PHP Objects'. so it doesn't matter what persistance
-layer your project uses. (Providing a compatible `Persistor` instance is available).
+layer your project uses. (Assuming a compatible `Persistor` instance is available).
 * Unlike other fixture libraries Filler does not make you specify which order fixtures should be loaded, which can be
   very tricky to maintain in large projects. Instead, fixtures just specify any dependencies they need and these will be
   provided when they are available.
