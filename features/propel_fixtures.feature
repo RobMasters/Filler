@@ -57,17 +57,17 @@ Feature: Propel fixtures
     | 1  | barry | barry@example.com |
     | 2  | ralph | ralph@example.com |
 
-
+  @wip
   Scenario: Populate single table using parent dependency
     Given the following propel schema:
     """
     <database name="filler" defaultIdMethod="native">
-      <table name="users" phpName="User" idMethod="native">
+      <table name="users_b" phpName="UserB" idMethod="native">
         <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
         <column name="name" phpName="Name" type="VARCHAR" size="255" required="true"/>
         <column name="email" phpName="Email" type="VARCHAR" size="255" required="true"/>
         <column name="supervisor_id" phpName="SupervisorId" type="INTEGER" required="false"/>
-        <foreign-key foreignTable="users" name="fk_users_supervisor">
+        <foreign-key foreignTable="users_b" name="fk_users_supervisor">
           <reference local="supervisor_id" foreign="id"/>
         </foreign-key>
       </table>
@@ -85,7 +85,7 @@ Feature: Propel fixtures
         public function build(FixturesBuilder $builder)
         {
             $builder
-                ->build('User')
+                ->build('UserB')
                     ->add('supervisor')
                         ->name('barry')
                         ->email('barry@example.com')
@@ -95,7 +95,7 @@ Feature: Propel fixtures
                     ->end()
             ;
 
-            $builder->depends(function($b, User $supervisor) {
+            $builder->depends(function($b, UserB $supervisor) {
                 $b
                     ->add()
                         ->name('sally')
@@ -108,7 +108,7 @@ Feature: Propel fixtures
     }
     """
     When I run "filler fixtures:load"
-    Then the user table should contain:
+    Then the UserB table should contain:
     | id | name  | email             | supervisorId |
     | 1  | barry | barry@example.com |              |
     | 2  | ralph | ralph@example.com |              |

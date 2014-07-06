@@ -13,6 +13,8 @@ use Symfony\Component\Process\Process;
  */
 class FeatureContext implements SnippetAcceptingContext
 {
+    protected static $includePath;
+
     /**
      * @var string
      */
@@ -44,7 +46,16 @@ class FeatureContext implements SnippetAcceptingContext
      * Cleans test folders in the temporary directory.
      *
      * @BeforeSuite
-     * @AfterSuite
+     */
+    public static function storeIncludePath()
+    {
+        self::$includePath = get_include_path();
+    }
+
+    /**
+     * Cleans test folders in the temporary directory.
+     *
+     * @AfterScenario
      */
     public static function cleanTestFolders()
     {
@@ -92,7 +103,7 @@ class FeatureContext implements SnippetAcceptingContext
         $this->process->setCommandLine($command)->run();
 
         $classPath = $this->workingDir . DIRECTORY_SEPARATOR . 'build' . DIRECTORY_SEPARATOR . 'classes';
-        set_include_path($classPath . PATH_SEPARATOR . get_include_path());
+        set_include_path($classPath . PATH_SEPARATOR . self::$includePath);
 
         $config = $this->workingDir . DIRECTORY_SEPARATOR . 'build' . DIRECTORY_SEPARATOR . 'conf' . DIRECTORY_SEPARATOR . 'filler-conf.php';
         Propel::init($config);
