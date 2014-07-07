@@ -3,6 +3,10 @@ Filler
 
 [![Build Status](https://secure.travis-ci.org/RobMasters/Filler.png?branch=master)](http://travis-ci.org/RobMasters/Filler)
 
+Filler is designed to be a fixtures library that makes life as simple as possible for developers. Unlike other popular fixture libraries, Filler doesn't make you responsible for specifying the order that fixtures need to load in order for dependencies to be available - you simply declare what dependencies you need where you need them.
+
+Filler can be used with any persistance layer, such as Propel1, Propel2, Doctrine2, or even your own home-grown persistance layer. The only assumption that is made is that your model classes have setter methods (e.g. setName, setEmail) to load data. At present only Propel1 is supported out-of-the-box, but it is straight-forward to provide your own `Persistor` object to tell Filler how to persist your models.
+
 Installation
 ------------
 
