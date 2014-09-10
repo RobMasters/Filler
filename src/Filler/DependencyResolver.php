@@ -98,7 +98,7 @@ class DependencyResolver
         }
 
         $parameters = array_values($this->dependencies);
-        array_unshift($parameters, $this->builder);
+        array_unshift($parameters, clone $this->builder);
         call_user_func_array($this->closure, $parameters);
         $this->executed = true;
     }
